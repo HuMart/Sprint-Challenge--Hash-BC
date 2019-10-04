@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     if id == 'NONAME\n':
         f = open("my_id.txt", "w")
-        id = f"Hugo-Martinez-{str(uuid4()).replace('-','')}"
+        id = str(uuid4()).replace('-','')
         print("Created new ID")
         f.write(id)
         f.close()
