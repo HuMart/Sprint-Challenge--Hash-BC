@@ -22,13 +22,18 @@ def proof_of_work(last_proof):
     """
 
     start = timer()
+    
+    print("Searching for proof")
 
-    print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
-    while valid_proof(last_proof, proof) is False:
-        proof += 1
 
+    last_proof_string = f"{last_proof}".encode()
+    last_proof_hash = hashlib.sha256(last_proof_string).hexdigest()
+    
+    while not valid_proof(last_proof_hash, proof):
+        proof += 5
+    
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
@@ -42,9 +47,13 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    guess = f"{proof}".encode()
-    guess_hash = hashlib.sha256(guess).hexdigest()
-    return str(last_hash)[:6] == guess_hash[6:]
+    # last_guess = f"{last_proof}".encode()
+    # last
+
+    guess_proof_string = f"{proof}".encode()
+    guess_proof_hash = hashlib.sha256(guess_proof_string).hexdigest()
+
+    return last_hash[-6:] == guess_proof_hash[:6]
 
 
 if __name__ == '__main__':
@@ -52,8 +61,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         node = sys.argv[1]
     else:
-        # node = "https://lambda-coin.herokuapp.com/api"
-        node = "https://lambda-coin-test-1.herokuapp.com/api"
+        node = "https://lambda-coin.herokuapp.com/api"
+        # node = "https://lambda-coin-test-1.herokuapp.com/api"
     coins_mined = 0
 
     # Load or create ID
@@ -64,7 +73,7 @@ if __name__ == '__main__':
 
     if id == 'NONAME\n':
         f = open("my_id.txt", "w")
-        id = str(uuid4()).replace('-','')
+        id = f"Hugo-Martinez-{str(uuid4()).replace('-','')}"
         print("Created new ID")
         f.write(id)
         f.close()
